@@ -19,12 +19,14 @@ import {
   signOut,
 } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons"; // You can use the Ionicons icon library
+import { useNavigation } from "@react-navigation/native";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
+  const navigation = useNavigation();
 
   const signIn = async () => {
     console.log("Button clicked");
@@ -74,7 +76,10 @@ export default function LoginPage() {
     <View style={styles.container}>
       <View style={{ position: "absolute", top: 70, left: 15 }}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            console.log("Go back button pressed");
+            navigation.navigate('GetStarted'); 
+          }}
           style={{ marginLeft: 10 }}
         >
           <Ionicons name="ios-arrow-back" size={30} color="white" />
@@ -137,6 +142,7 @@ const styles = StyleSheet.create({
     borderRadius: 10, // Rounded corners
     padding: 10, // Padding for input container
     margin: 10,
+    width: 300, // Set the width to make it smaller in the horizontal direction
   },
   input: {
     flex: 1,
