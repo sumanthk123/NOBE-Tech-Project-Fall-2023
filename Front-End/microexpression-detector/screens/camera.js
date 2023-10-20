@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState, useRef, useEffect } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import {Video} from 'expo-av';
 
@@ -75,6 +75,10 @@ export default function camera() {
                 </TouchableOpacity>
 
             </View>
+            <Image
+                source={require('../assets/outline.png')} 
+                style={styles.overlayImage}
+            />
         </Camera>
     </View>
     );
@@ -122,5 +126,13 @@ const styles = StyleSheet.create({
     videoContainer: {
         flex: 1,
         alignSelf: 'stretch',
+    },
+    overlayImage: {
+        position: 'absolute',
+        left: 70, // Adjust the left position of the image
+        top: 150, // Adjust the top position of the image
+        width: 250, // Adjust the width of the image
+        height: 250, // Adjust the height of the image
+
     },
 });
