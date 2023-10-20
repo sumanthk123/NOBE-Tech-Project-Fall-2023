@@ -1,5 +1,15 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Animated, LayoutAnimation } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  Animated,
+  LayoutAnimation,
+} from "react-native";
+import Svg, { Circle } from "react-native-svg";
+import { SvgXml } from "react-native-svg"; // Import SvgXml from react-native-svg
 
 const GetStarted = ({ navigation }) => {
   const scaleValue = new Animated.Value(1);
@@ -28,7 +38,7 @@ const GetStarted = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={handleButtonPress}
-        activeOpacity={0.8} // Add a touch feedback effect
+        activeOpacity={0.8}
       >
         <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity>
@@ -41,13 +51,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#3498db", // Blue background
+    backgroundColor: "#3498db",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    color: "white", // White text color
+    color: "white",
   },
   button: {
     borderWidth: 2,
@@ -57,7 +67,7 @@ const styles = StyleSheet.create({
     width: 200,
     alignItems: "center",
     backgroundColor: "transparent",
-    overflow: "hidden", // Clip the button content
+    overflow: "hidden",
   },
   buttonText: {
     color: "white",
@@ -67,7 +77,7 @@ const styles = StyleSheet.create({
 
 // Animation configuration for the expanding effect
 LayoutAnimation.configureNext({
-  duration: 1000, // Animation duration in milliseconds
+  duration: 1000,
   create: {
     type: LayoutAnimation.Types.easeInEaseOut,
     property: LayoutAnimation.Properties.scaleXY,
@@ -76,6 +86,5 @@ LayoutAnimation.configureNext({
     type: LayoutAnimation.Types.easeInEaseOut,
   },
 });
-
 
 export default GetStarted;

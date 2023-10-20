@@ -17,7 +17,7 @@ const InsideStack = createStackNavigator();
 function InsideLayout() {
   return (
     <InsideStack.Navigator>
-      <InsideStack.Screen name="Main" component={Main} />
+      <InsideStack.Screen name="Main" component={Main} options={{ headerShown: false }}/>
     </InsideStack.Navigator>
   );
 }
@@ -39,7 +39,7 @@ export default function App() {
           <Stack.Screen
             name="Main"
             component={InsideLayout}
-            options={{ headerShown: true }}
+            options={{ headerShown: false }}
           />
         ) : (
           <>
