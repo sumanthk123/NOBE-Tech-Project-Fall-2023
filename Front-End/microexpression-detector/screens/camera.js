@@ -45,8 +45,12 @@ export default function camera() {
     if(video){
         return(
             <View style={styles.container}>
-                <Video source={{uri: video.uri}} style={styles.video} useNativeControls resizeMode="contain" isLooping/>  
-                <Button title = "Retake" onPress = {() => setVideo(undefined)}/>
+                <View style={styles.videoContainer}>
+                    <Video source={{ uri: video.uri }} style={styles.video} useNativeControls resizeMode="contain" isLooping />
+                </View>
+                <View style={styles.retakeButtonContainer}>
+                    <Button title="Retake" onPress={() => setVideo(undefined)} />
+                </View>
             </View>
  
             
@@ -80,11 +84,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        paddingBottom: 20,
     },
     camera: {
         flex: 1,
-        borderRadius: 20,
         justifyContent: 'space-between',
     },
     buttonContainer: {
@@ -93,10 +95,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         margin: 20,
         justifyContent: 'space-between',
+        marginBottom: 30, 
+    },
+    retakeButtonContainer: {
+        alignItems: 'center',
+        marginBottom: 30, // Adjust margin bottom as needed for the retake button
     },
     button: {
         alignItems: 'center',
-        paddingBottom: 20,
+        alignSelf: 'flex-end',
     },
     notRecordingButton: {
         backgroundColor: '#4CAF50',
@@ -105,11 +112,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#FF0000',
     },
     text: {
-        fontSize: 18,
+        fontSize: 24,
         color: 'white',
     },
     video: {
         flex: 1,
         alignSelf: "stretch"
-    }
+    },
+    videoContainer: {
+        flex: 1,
+        alignSelf: 'stretch',
+    },
 });
