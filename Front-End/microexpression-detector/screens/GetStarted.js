@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,35 +6,37 @@ import {
   StyleSheet,
   SafeAreaView,
   Animated,
-  LayoutAnimation,
+  Image,
 } from "react-native";
-import Svg, { Circle } from "react-native-svg";
-import { SvgXml } from "react-native-svg"; // Import SvgXml from react-native-svg
+
+
 
 const GetStarted = ({ navigation }) => {
-  const scaleValue = new Animated.Value(1);
+  const svgUrl =
+    "https://www.svgrepo.com/show/382362/emoticon-expression-face-liar-face-lie.svg";
+
+  const [scaleValue] = useState(new Animated.Value(1));
 
   const handleButtonPress = () => {
-    // Create a button press animation
-    Animated.sequence([
-      Animated.timing(scaleValue, {
-        toValue: 0.95,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleValue, {
-        toValue: 1,
-        friction: 4,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    Animated.spring(scaleValue, {
+      toValue: 1.1, // Adjust the scale factor for expansion
+      friction: 4,
+      useNativeDriver: false,
+    }).start();
 
-    navigation.navigate("Login"); // Navigate to the Login page
+    // Delay the navigation for a smoother effect
+    setTimeout(() => {
+      navigation.navigate("Login"); // Navigate to the Login page
+    }, 200); // Adjust the delay as needed
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Lie:Detect</Text>
+    <SafeAreaView style={styles.container}>     
+      <Animated.Text
+        style={[styles.title, { transform: [{ scale: scaleValue }] }]}
+      >
+        Lie:Detect
+      </Animated.Text>
       <TouchableOpacity
         style={styles.button}
         onPress={handleButtonPress}
@@ -51,13 +53,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#3498db",
+    backgroundColor: "#88C6FF",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
     color: "white",
+    fontWeight: "bold",
+    fontFamily: "Recursive"
+
   },
   button: {
     borderWidth: 2,
@@ -66,25 +71,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: 200,
     alignItems: "center",
-    backgroundColor: "transparent",
+    backgroundColor: "white",
     overflow: "hidden",
   },
   buttonText: {
-    color: "white",
+    color: "#3498db",
     fontSize: 18,
+    fontWeight: "bold",
   },
-});
-
-// Animation configuration for the expanding effect
-LayoutAnimation.configureNext({
-  duration: 1000,
-  create: {
-    type: LayoutAnimation.Types.easeInEaseOut,
-    property: LayoutAnimation.Properties.scaleXY,
-  },
-  update: {
-    type: LayoutAnimation.Types.easeInEaseOut,
-  },
+  
 });
 
 export default GetStarted;
