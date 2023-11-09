@@ -13,11 +13,14 @@ import { Video } from "expo-av";
 import Icon from "react-native-vector-icons/Ionicons"; // Import the icon library
 import Icons from "react-native-vector-icons/FontAwesome";
 import CameraIcon from "/Users/arjunkulkarni/Desktop/lie-detector/NOBE-Tech-Project-Fall-2023/Front-End/microexpression-detector/assets/Images/Screen_Shot_2023-10-24_at_5.24.37_PM-removebg-preview.png";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { NavigationContainer } from "@react-navigation/native";
+
+const Tab = createBottomTabNavigator();
 
 export default function camera() {
   const [type, setType] = useState(CameraType.back);
-  const [hasCameraPermission, setHasCameraPermission] =
-    Camera.useCameraPermissions();
+  const [hasCameraPermission, setHasCameraPermission] = Camera.useCameraPermissions();
   const [isRecording, setIsRecording] = useState(false);
   const [video, setVideo] = useState();
   const cameraRef = useRef(null);
@@ -96,7 +99,7 @@ export default function camera() {
           </View>
         </View>
       </Camera>
-
+        
       <View style={styles.navBarContainer}>
         <View style={styles.navBar}>
           <TouchableOpacity style={styles.navIcon}>
@@ -113,7 +116,8 @@ export default function camera() {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+            
+    </View>    
   );
 }
 
