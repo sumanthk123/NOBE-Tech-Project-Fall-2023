@@ -37,10 +37,7 @@ const GetStarted = ({ navigation }) => {
         backgroundColor: "white",
       }}
     >
-      <Image
-        style={{ width: "100%", height: "100%" }}
-        source={{ uri: "https://via.placeholder.com/226x175" }}
-      />
+
 
       <View
         style={{

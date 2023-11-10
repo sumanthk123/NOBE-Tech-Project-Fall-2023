@@ -1,5 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Button,
   StyleSheet,
@@ -10,17 +9,17 @@ import {
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import { Video } from "expo-av";
-import Icon from "react-native-vector-icons/Ionicons"; // Import the icon library
+import Icon from "react-native-vector-icons/Ionicons";
 import Icons from "react-native-vector-icons/FontAwesome";
 import CameraIcon from "/Users/arjunkulkarni/Desktop/lie-detector/NOBE-Tech-Project-Fall-2023/Front-End/microexpression-detector/assets/Images/Screen_Shot_2023-10-24_at_5.24.37_PM-removebg-preview.png";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { NavigationContainer } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
-const Tab = createBottomTabNavigator();
+const CameraComponent = () => {
+  const navigation = useNavigation();
 
-export default function camera() {
   const [type, setType] = useState(CameraType.back);
-  const [hasCameraPermission, setHasCameraPermission] = Camera.useCameraPermissions();
+  const [hasCameraPermission, setHasCameraPermission] =
+    Camera.useCameraPermissions();
   const [isRecording, setIsRecording] = useState(false);
   const [video, setVideo] = useState();
   const cameraRef = useRef(null);
@@ -55,25 +54,6 @@ export default function camera() {
     cameraRef.current.stopRecording();
   };
 
-  if (video) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.videoContainer}>
-          <Video
-            source={{ uri: video.uri }}
-            style={styles.video}
-            useNativeControls
-            resizeMode="contain"
-            isLooping
-          />
-        </View>
-        <View style={styles.retakeButtonContainer}>
-          <Button title="Retake" onPress={() => setVideo(undefined)} />
-        </View>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
       <Camera style={styles.camera} type={type} ref={cameraRef}>
@@ -99,27 +79,36 @@ export default function camera() {
           </View>
         </View>
       </Camera>
-        
+
+      {/* Render the NavBar component */}
       <View style={styles.navBarContainer}>
         <View style={styles.navBar}>
-          <TouchableOpacity style={styles.navIcon}>
+          <TouchableOpacity
+            style={styles.navIcon}
+            onPress={() => navigation.navigate("Profile")}
+          >
             <Icon name="person" size={24} color="#000" />
             <Text> Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navIcon}>
+          <TouchableOpacity
+            style={styles.navIcon}
+            onPress={() => navigation.navigate("Info")}
+          >
             <Icons name="info-circle" size={24} color="#000" />
             <Text> Info</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navIcon}>
+          <TouchableOpacity
+            style={styles.navIcon}
+            onPress={() => navigation.navigate("Detect")}
+          >
             <Icon name="search" size={24} color="#000" />
-            <Text> Detect</Text>
+            <Text> Search</Text>
           </TouchableOpacity>
         </View>
       </View>
-            
-    </View>    
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -134,24 +123,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "transparent",
     flexDirection: "row",
-    alignItems: "center", // Center the buttons vertically
-    justifyContent: "space-around", // Spacing around the buttons
+    alignItems: "center",
+    justifyContent: "space-around",
     marginBottom: 30,
     alignContent: "center",
-    
   },
   centeredContent: {
-    alignItems: 'center',
+    alignItems: "center",
     flexDirection: "row",
   },
   retakeButtonContainer: {
     alignItems: "center",
-    marginBottom: 30, // Adjust margin bottom as needed for the retake button
+    marginBottom: 30,
   },
   button: {
-    padding: 15, // Add some padding for touchability
-    borderRadius: 20, // Rounded corners
-    width: 150, // Adjust the button width
+    padding: 15,
+    borderRadius: 20,
+    width: 150,
     alignItems: "center",
     alignSelf: "flex-end",
     marginBottom: 0,
@@ -177,27 +165,27 @@ const styles = StyleSheet.create({
   },
   overlayImage: {
     position: "absolute",
-    left: 70, // Adjust the left position of the image
-    top: 150, // Adjust the top position of the image
-    width: 250, // Adjust the width of the image
-    height: 250, // Adjust the height of the image
+    left: 70,
+    top: 150,
+    width: 250,
+    height: 250,
   },
   icon: {
     marginTop: 600,
-    width: 100, // Adjust the width of the icon as needed
-    height: 30
+    width: 100,
+    height: 30,
   },
   navBar: {
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 16, // Adjust the vertical padding
-    paddingHorizontal: 20, // Adjust the horizontal padding
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     borderTopWidth: 1,
     borderTopColor: "#ccc",
-    borderRadius: 20, // Add border radius to make it round
-    marginBottom: 10, // Adjust the margin bottom to move it up
+    borderRadius: 20,
+    marginBottom: 10,
     alignContent: "center",
   },
   navIcon: {
@@ -206,8 +194,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   navBarContainer: {
-    backgroundColor: "black", // Container background color
-    padding: 10, // Add any padding or styling you desire
+    backgroundColor: "black",
+    padding: 10,
     marginBottom: 30,
   },
 });
+
+export default CameraComponent;
