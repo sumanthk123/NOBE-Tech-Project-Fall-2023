@@ -11,7 +11,7 @@ import { Camera, CameraType } from "expo-camera";
 import { Video } from "expo-av";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icons from "react-native-vector-icons/FontAwesome";
-import CameraIcon from "/Users/arjunkulkarni/Desktop/lie-detector/NOBE-Tech-Project-Fall-2023/Front-End/microexpression-detector/assets/Images/Screen_Shot_2023-10-24_at_5.24.37_PM-removebg-preview.png";
+import CameraIcon from "/Users/shalinjoshi/Desktop/NOBE-Tech-Project-Fall-2023/Front-End/microexpression-detector/assets/Images/Screen_Shot_2023-10-24_at_5.24.37_PM-removebg-preview.png";
 import { useNavigation } from "@react-navigation/native";
 
 const CameraComponent = () => {
@@ -77,6 +77,10 @@ const CameraComponent = () => {
               </Text>
             </TouchableOpacity>
           </View>
+          <Image
+                source={require('../assets/outline2.png')} 
+                style={styles.overlayImage}
+            />
         </View>
       </Camera>
 
@@ -198,6 +202,14 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 30,
   },
+  overlayImage: {
+    position: 'absolute',
+    left: 70, // Adjust the left position of the image
+    top: 150, // Adjust the top position of the image
+    width: 250, // Adjust the width of the image
+    height: 250, // Adjust the height of the image
+
+},
 });
 
 export default CameraComponent;
