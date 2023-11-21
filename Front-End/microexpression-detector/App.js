@@ -31,7 +31,7 @@ function InsideLayout() {
 
 export default function App() {
   let [fontsLoaded] = useFonts({
-    Recursive: require("/Users/shalinjoshi/Desktop/NOBE-Tech-Project-Fall-2023/Front-End/microexpression-detector/assets/fonts/Recursive-SemiBold.ttf"),
+    Recursive: require('../microexpression-detector/assets/fonts/Recursive-SemiBold.ttf'),
   });
 
   const [user, setUser] = useState(null);

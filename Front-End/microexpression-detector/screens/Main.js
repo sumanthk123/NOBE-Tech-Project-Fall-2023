@@ -11,8 +11,9 @@ import { Camera, CameraType } from "expo-camera";
 import { Video } from "expo-av";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icons from "react-native-vector-icons/FontAwesome";
-import CameraIcon from "/Users/shalinjoshi/Desktop/NOBE-Tech-Project-Fall-2023/Front-End/microexpression-detector/assets/Images/Screen_Shot_2023-10-24_at_5.24.37_PM-removebg-preview.png";
+import CameraIcon from "../assets/Images/Screen_Shot_2023-10-24_at_5.24.37_PM-removebg-preview.png";
 import { useNavigation } from "@react-navigation/native";
+
 
 const CameraComponent = () => {
   const navigation = useNavigation();
@@ -23,6 +24,7 @@ const CameraComponent = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [video, setVideo] = useState();
   const cameraRef = useRef(null);
+
 
   useEffect(() => {
     (async () => {
@@ -54,6 +56,20 @@ const CameraComponent = () => {
     cameraRef.current.stopRecording();
   };
 
+  if(video){
+    return(
+        <View style={styles.container}>
+            <View style={styles.videoContainer}>
+                <Video source={{ uri: video.uri }} style={styles.video} useNativeControls resizeMode="contain" isLooping />
+            </View>
+            <View style={styles.retakeButtonContainer}>
+                <Button title="Retake" onPress={() => setVideo(undefined)} />
+            </View>
+        </View>
+
+        
+    )
+    }
   return (
     <View style={styles.container}>
       <Camera style={styles.camera} type={type} ref={cameraRef}>
@@ -103,7 +119,7 @@ const CameraComponent = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.navIcon}
-            onPress={() => navigation.navigate("Detect")}
+            onPress={() => navigation.navigate("Video Library")}
           >
             <Icon name="search" size={24} color="#000" />
             <Text> Search</Text>
