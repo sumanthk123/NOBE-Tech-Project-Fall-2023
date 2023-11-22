@@ -13,6 +13,9 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Icons from "react-native-vector-icons/FontAwesome";
 import CameraIcon from "../assets/Images/Screen_Shot_2023-10-24_at_5.24.37_PM-removebg-preview.png";
 import { useNavigation } from "@react-navigation/native";
+import VideoLibrary from "./VideoLibrary";
+//import Voice from '@react-native-voice/voice';
+
 
 
 const CameraComponent = () => {
@@ -24,14 +27,23 @@ const CameraComponent = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [video, setVideo] = useState();
   const cameraRef = useRef(null);
-
+  const [videoList, setVideoList] = useState([]);
+  //let [started, setStarted] = useState(false);
+  //let [results, setResults] = useState([]);
 
   useEffect(() => {
     (async () => {
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === "granted");
     })();
+   // Voice.onSpeechError = onSpeechError;
+    //Voice.onSpeechResults = onSpeechResults;
+
+   /* return() => {
+      Voice.destroy().then(Voice.removeAllListeners);
+   }*/
   }, []);
+  
 
   if (hasCameraPermission === false) {
     return <Text>No access to camera</Text>;
@@ -42,21 +54,57 @@ const CameraComponent = () => {
       current === CameraType.back ? CameraType.front : CameraType.back
     );
   }
+  
+  /*const startSpeechToText = () => {
+    Voice.start("en");
+    setStarted(true);
+  };
+
+  const stopSpeechToText = () => {
+    Voice.stop();
+    setStarted(false);
+  };
+
+  const onSpeechResults = (result) => {
+    setResults(result.value);
+    console.log("Speech to text results:", result.value);
+  };
+
+  const onSpeechError = (error) => {
+    console.log(error);
+  };
+ */
+
 
   const recordVideo = async () => {
     setIsRecording(true);
-    cameraRef.current.recordAsync().then((recordedVideo) => {
-      setVideo(recordedVideo);
+    //startSpeechToText();
+    try {
+      const recordedVideo = await cameraRef.current.recordAsync();
+      console.log('Recorded video:', recordedVideo);
+      addVideoToLibrary(recordedVideo);
+    } catch (error) {
+      console.error('Error recording video:', error);
+    } finally {
+      console.log('Stopping recording...');
       setIsRecording(false);
-    });
+      // stopSpeechToText();
+    }
   };
 
   const stopVideo = async () => {
     setIsRecording(false);
     cameraRef.current.stopRecording();
+    //stopSpeechToText();
   };
 
-  if(video){
+  const addVideoToLibrary = (video) => {
+    setVideoList((prevList) => [...prevList, video]);
+    console.log("video is added to libray");
+  };
+
+ 
+  /*if(video){
     return(
         <View style={styles.container}>
             <View style={styles.videoContainer}>
@@ -65,11 +113,11 @@ const CameraComponent = () => {
             <View style={styles.retakeButtonContainer}>
                 <Button title="Retake" onPress={() => setVideo(undefined)} />
             </View>
-        </View>
 
-        
+        </View>
     )
     }
+*/
   return (
     <View style={styles.container}>
       <Camera style={styles.camera} type={type} ref={cameraRef}>
@@ -86,7 +134,7 @@ const CameraComponent = () => {
                   ? styles.recordingButton
                   : styles.notRecordingButton,
               ]}
-              onPress={isRecording ? stopVideo : recordVideo}
+              onPress={isRecording ? stopVideo:recordVideo}
             >
               <Text style={styles.text}>
                 {isRecording ? "Stop Recording" : "Record"}
@@ -119,10 +167,10 @@ const CameraComponent = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.navIcon}
-            onPress={() => navigation.navigate("Video Library")}
+            onPress={() => navigation.navigate('VideoLibrary', {videoList})}
           >
             <Icon name="search" size={24} color="#000" />
-            <Text> Search</Text>
+            <Text> Video Library</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -153,8 +201,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   retakeButtonContainer: {
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     marginBottom: 30,
+    alignItems: 'center',
   },
   button: {
     padding: 15,
