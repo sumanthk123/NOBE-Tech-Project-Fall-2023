@@ -57,7 +57,7 @@ export default function App() {
             <Stack.Screen
               name="Profile"
               component={Profile}
-              options={{ title: "Profile" }}
+              options={{ title: "Profile", headerShown: false }}
             />
             <Stack.Screen
               name="Info"

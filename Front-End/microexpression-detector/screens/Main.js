@@ -13,6 +13,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Icons from "react-native-vector-icons/FontAwesome";
 import CameraIcon from "/Users/arjunkulkarni/Desktop/lie-detector/NOBE-Tech-Project-Fall-2023/Front-End/microexpression-detector/assets/Images/Screen_Shot_2023-10-24_at_5.24.37_PM-removebg-preview.png";
 import { useNavigation } from "@react-navigation/native";
+import { Audio } from "expo-av";
 
 const CameraComponent = () => {
   const navigation = useNavigation();
@@ -23,11 +24,16 @@ const CameraComponent = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [video, setVideo] = useState();
   const cameraRef = useRef(null);
+  const [audioPermission, setAudioPermission] = useState(null);
+  const [audioRecording, setAudioRecording] = useState(null);
 
   useEffect(() => {
     (async () => {
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === "granted");
+
+      const audioStatus = await Audio.requestPermissionsAsync();
+      setAudioPermission(audioStatus.status === "granted");
     })();
   }, []);
 
@@ -43,6 +49,9 @@ const CameraComponent = () => {
 
   const recordVideo = async () => {
     setIsRecording(true);
+    // Start audio recording simultaneously
+    startAudioRecording();
+
     cameraRef.current.recordAsync().then((recordedVideo) => {
       setVideo(recordedVideo);
       setIsRecording(false);
@@ -52,6 +61,52 @@ const CameraComponent = () => {
   const stopVideo = async () => {
     setIsRecording(false);
     cameraRef.current.stopRecording();
+  };
+
+  const startAudioRecording = async () => {
+    if (!audioPermission) {
+      console.log("No permission to record audio");
+      return;
+    }
+
+    try {
+      if (audioRecording) {
+        console.log("Stopping existing recording...");
+        await audioRecording.stopAndUnloadAsync();
+        setAudioRecording(null);
+      }
+
+      // Set the audio mode
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      const recording = new Audio.Recording();
+      await recording.prepareToRecordAsync(
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+      );
+      await recording.startAsync();
+      setAudioRecording(recording);
+      console.log("Audio recording started");
+    } catch (error) {
+      console.error("Failed to start audio recording", error);
+    }
+  };
+
+  const stopAudioRecording = async () => {
+    if (!audioRecording) {
+      console.log("No audio recording in progress");
+      return;
+    }
+
+    try {
+      await audioRecording.stopAndUnloadAsync();
+      setAudioRecording(null);
+      console.log("Audio recording stopped");
+    } catch (error) {
+      console.error("Failed to stop audio recording", error);
+    }
   };
 
   return (
@@ -72,9 +127,7 @@ const CameraComponent = () => {
               ]}
               onPress={isRecording ? stopVideo : recordVideo}
             >
-              <Text style={styles.text}>
-                {isRecording ? "Stop Recording" : "Record"}
-              </Text>
+              <Text style={styles.text}>{isRecording ? "Stop" : "Start"}</Text>
             </TouchableOpacity>
           </View>
         </View>
