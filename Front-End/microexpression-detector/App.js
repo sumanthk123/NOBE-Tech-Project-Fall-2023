@@ -13,6 +13,7 @@ import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import Profile from "./screens/Profile";
 import Info from "./screens/Info";
+import VideoLibrary from "./screens/VideoLibrary";
 
 const Stack = createStackNavigator();
 
@@ -63,6 +64,11 @@ export default function App() {
               name="Info"
               component={Info}
               options={{ title: "Info" }}
+            />
+            <Stack.Screen
+              name="VideoLibrary"
+              component={VideoLibrary}
+              options={{ title: "VideoLibrary" }}
             />
           </>
         ) : (

@@ -14,6 +14,7 @@ import Icons from "react-native-vector-icons/FontAwesome";
 import CameraIcon from "/Users/arjunkulkarni/Desktop/lie-detector/NOBE-Tech-Project-Fall-2023/Front-End/microexpression-detector/assets/Images/Screen_Shot_2023-10-24_at_5.24.37_PM-removebg-preview.png";
 import { useNavigation } from "@react-navigation/native";
 import { Audio } from "expo-av";
+import Constants from 'expo-constants';
 
 const CameraComponent = () => {
   const navigation = useNavigation();
@@ -26,6 +27,7 @@ const CameraComponent = () => {
   const cameraRef = useRef(null);
   const [audioPermission, setAudioPermission] = useState(null);
   const [audioRecording, setAudioRecording] = useState(null);
+  const [videoList, setVideoList] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -48,15 +50,24 @@ const CameraComponent = () => {
   }
 
   const recordVideo = async () => {
-    setIsRecording(true);
-    // Start audio recording simultaneously
-    startAudioRecording();
-
-    cameraRef.current.recordAsync().then((recordedVideo) => {
-      setVideo(recordedVideo);
+    try {
+      setIsRecording(true);
+      console.log('Start recording...');
+      
+      const recordedVideo = await cameraRef.current.recordAsync();
+      console.log('Recorded video:', recordedVideo);
+      
+      // Assuming addVideoToLibrary is a function to add the recorded video to a library
+      addVideoToLibrary(recordedVideo);
+    } catch (error) {
+      console.error('Error recording video:', error);
+    } finally {
+      console.log('Stopping recording...');
       setIsRecording(false);
-    });
-  };
+      // Any cleanup or post-recording actions can be added here
+      // stopSpeechToText();
+    }
+  };  
 
   const stopVideo = async () => {
     setIsRecording(false);
@@ -109,6 +120,11 @@ const CameraComponent = () => {
     }
   };
 
+  const addVideoToLibrary = (video) => {
+    setVideoList((prevList) => [...prevList, video]);
+    console.log("video is added to library");
+  };
+
   return (
     <View style={styles.container}>
       <Camera style={styles.camera} type={type} ref={cameraRef}>
@@ -152,10 +168,10 @@ const CameraComponent = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.navIcon}
-            onPress={() => navigation.navigate("Detect")}
+            onPress={() => navigation.navigate('VideoLibrary', {videoList})}
           >
-            <Icon name="search" size={24} color="#000" />
-            <Text> Search</Text>
+            <Icon name="camera" size={24} color="#000" />
+            <Text> Library</Text>
           </TouchableOpacity>
         </View>
       </View>
