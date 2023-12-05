@@ -121,9 +121,15 @@ const CameraComponent = () => {
   };
 
   const addVideoToLibrary = (video) => {
-    setVideoList((prevList) => [...prevList, video]);
-    console.log("video is added to library");
+    try {
+      setVideoList((prevList) => [...prevList, video]);
+      console.log("Video added to library:", video);
+      console.log("Updated Video List:", videoList);
+    } catch (error) {
+      console.error("Error adding video to library:", error);
+    }
   };
+  
 
   return (
     <View style={styles.container}>
@@ -146,6 +152,10 @@ const CameraComponent = () => {
               <Text style={styles.text}>{isRecording ? "Stop" : "Start"}</Text>
             </TouchableOpacity>
           </View>
+          <Image
+                source={require('../assets/outline2.png')} 
+                style={styles.overlayImage}
+            />
         </View>
       </Camera>
 
@@ -267,6 +277,14 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 30,
   },
+  overlayImage: {
+    position: "absolute",
+    left: 70,
+    top: 200,
+    width: 250,
+    height: 250,
+  },
+
 });
 
 export default CameraComponent;

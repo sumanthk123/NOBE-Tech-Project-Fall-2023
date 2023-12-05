@@ -39,9 +39,14 @@ const VideoLibrary = ({ route }) => {
         >
           <View style={styles.modalContainer}>
             <Video source={{ uri: selectedVideo.uri }} style={styles.fullScreenVideo} useNativeControls />
+            <View style={styles.buttonsContainer}>
+            <TouchableOpacity style={styles.customButton}>
+                <Text style={styles.buttonText}>Custom Button</Text>
+              </TouchableOpacity>
             <TouchableOpacity style={styles.closeButton} onPress={handleCloseModal}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
+            </View>
           </View>
         </Modal>
       )}
@@ -69,13 +74,33 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   closeButton: {
-    backgroundColor: 'white',
-    padding: 10,
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     alignItems: 'center',
+    borderRadius: 8,
+    margin: 10,
   },
-  closeButtonText: {
-    color: 'black',
+  customButton: {
+    backgroundColor: '#3F51B5',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    borderRadius: 8,
+    margin: 10,
   },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
 });
 
 export default VideoLibrary;

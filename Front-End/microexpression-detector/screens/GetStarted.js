@@ -82,7 +82,7 @@ const GetStarted = ({ navigation }) => {
           color: "#00305F",
           fontSize: 40,
           fontFamily: "Recursive",
-          fontWeight: "1000",
+          fontWeight: "900",
           wordWrap: "break-word",
         }}
       >
@@ -106,7 +106,7 @@ const GetStarted = ({ navigation }) => {
             color: "#00305F",
             fontSize: 20,
             fontFamily: "Recursive",
-            fontWeight: "1000",
+            fontWeight: "900",
             textAlign: "center",
             lineHeight: 24,
             width: 192,

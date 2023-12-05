@@ -9,11 +9,11 @@ import { FIREBASE_AUTH } from "./firebaseConfig";
 import Main from "./screens/Main";
 import GetStarted from "./screens/GetStarted";
 import React from "react";
-import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import Profile from "./screens/Profile";
 import Info from "./screens/Info";
 import VideoLibrary from "./screens/VideoLibrary";
+
 
 const Stack = createStackNavigator();
 
@@ -32,6 +32,9 @@ function InsideLayout() {
 }
 
 export default function App() {
+  const [fontLoaded, setFontLoaded] = useState(false);
+
+
   let [fontsLoaded] = useFonts({
     Recursive: require("/Users/arjunkulkarni/Desktop/lie-detector/NOBE-Tech-Project-Fall-2023/Front-End/microexpression-detector/assets/fonts/Recursive-SemiBold.ttf"),
   });
@@ -76,7 +79,7 @@ export default function App() {
             <Stack.Screen
               name="GetStarted"
               component={GetStarted}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, fontFamily: 'Recursive', }}
             />
             <Stack.Screen
               name="Login"
