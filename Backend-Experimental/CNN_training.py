@@ -19,9 +19,10 @@ class Net(nn.Module):
         super(Net, self).__init__()
         self.conv1 = nn.Conv2d(1, 32, 4, 1)
         self.conv2 = nn.Conv2d(32, 64, 4, 1)
+        self.conv3 = nn.Conv2d(64, 128, 4, 1)
         self.dropout1 = nn.Dropout(0.25)
         self.dropout2 = nn.Dropout(0.5)
-        self.fc1 = nn.Linear(28224, 441)
+        self.fc1 = nn.Linear(41472, 441)
         self.fc2 = nn.Linear(441, 7)
 
     def forward(self, x):
@@ -31,6 +32,7 @@ class Net(nn.Module):
         x = f.relu(x)
         x = f.max_pool2d(x, 2)
         x = self.dropout1(x)
+        x = self.conv3(x)
         x = torch.flatten(x, 1)
         x = self.fc1(x)
         x = f.relu(x)
