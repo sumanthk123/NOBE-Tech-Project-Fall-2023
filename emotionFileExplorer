@@ -1,0 +1,54 @@
+import os
+import csv
+
+# Function to convert identifiers to full words
+def convert_identifiers(identifier, code):
+    conversions = {
+        'Modality': {'01': 'full-AV', '02': 'video-only', '03': 'audio-only'},
+        'Vocal Channel': {'01': 'speech', '02': 'song'},
+        'Emotion': {'01': 'neutral', '02': 'calm', '03': 'happy', '04': 'sad', '05': 'angry', '06': 'fearful', '07': 'disgust', '08': 'surprised'},
+        'Emotional Intensity': {'01': 'normal', '02': 'strong'},
+        'Statement': {'01': 'Kids', '02': 'Dogs'},
+        'Repetition': {'01': '1st repetition', '02': '2nd repetition'},
+        'Actor': {str(i).zfill(2): f'Actor {i} ({"Male" if i % 2 != 0 else "Female"})' for i in range(1, 25)}
+    }
+
+    return conversions[identifier].get(code, 'Unknown')
+
+# Directory containing your folders with WAV files
+main_directory = '/Users/arjunkulkarni/desktop/datasetAudioLie/audio_speech_actors_01-24'
+
+# CSV file to write the results
+csv_file = 'emotions.csv'
+
+# Header for the CSV file including all identifiers
+header = ['Modality', 'Vocal Channel', 'Emotion', 'Emotional Intensity', 'Statement', 'Repetition', 'Actor', 'File Name']
+
+# Open CSV file for writing
+with open(csv_file, 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(header)
+
+    # Iterate through each folder in the main directory
+    for folder in os.listdir(main_directory):
+        folder_path = os.path.join(main_directory, folder)
+
+        # Check if it's a directory
+        if os.path.isdir(folder_path):
+            # Iterate through files in the folder
+            for file_name in os.listdir(folder_path):
+                if file_name.endswith('.wav'):
+                    # Extract identifiers from the file name
+                    file_parts = file_name.split('-')
+                    modality = convert_identifiers('Modality', file_parts[0])
+                    vocal_channel = convert_identifiers('Vocal Channel', file_parts[1])
+                    emotion = convert_identifiers('Emotion', file_parts[2])
+                    intensity = convert_identifiers('Emotional Intensity', file_parts[3])
+                    statement = convert_identifiers('Statement', file_parts[4])
+                    repetition = convert_identifiers('Repetition', file_parts[5])
+                    actor = convert_identifiers('Actor', file_parts[6].split('.')[0])  # Remove '.wav' extension
+
+                    # Write to CSV including all identifiers
+                    writer.writerow([modality, vocal_channel, emotion, intensity, statement, repetition, actor, file_name])
+
+print("CSV file created successfully.")
