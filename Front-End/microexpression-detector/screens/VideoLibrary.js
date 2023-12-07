@@ -14,8 +14,6 @@ const VideoLibrary = ({ route }) => {
   const handleCloseModal = () => {
     setSelectedVideo(null);
   };
-
-  
   
   const handleTranscribePress = async () => {
     console.log('button pressed')
@@ -28,10 +26,11 @@ const VideoLibrary = ({ route }) => {
         name: 'video.mov',
       });
 
+      console.log('Video File Path:', selectedVideo.uri);
+
       // Send a request to your backend with the selected video URI
-      console.log('Request URL:', 'http://127.0.0.1:8000');  // Replace with your actual backend URL
       console.log('Request Payload:', JSON.stringify({ videoUri: selectedVideo.uri }));
-      const response = await fetch('http://127.0.0.1:8000', {
+      const response = await fetch('http://10.195.103.203:5000/', {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
