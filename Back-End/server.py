@@ -26,7 +26,7 @@ MIMETYPE = 'audio/mp3'
 Deepgram = Deepgram(DEEPGRAM_API_KEY)
 
 async def get_transcription(fp):
-
+    
     audio = open(fp, 'rb')
 
     source = {
@@ -43,6 +43,7 @@ async def get_transcription(fp):
     )
     
     response = response["results"]["channels"][0]["alternatives"][0]["transcript"]
+    print(response)
     return response
     
 @app.route('/', methods=['POST'])
@@ -69,12 +70,10 @@ def transcribe():
             audio_filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'{os.path.splitext(filename)[0]}.mp3')
             video.audio.write_audiofile(audio_filepath, codec='mp3')
             print(video)
-            # Perform transcription using the provided video URI
-            #return asyncio.run(get_transcription(video))
-
-
-
-            return jsonify({'message': 'File received successfully', 'filePath': filepath})
+            #Perform transcription using the provided video URI
+            transcript =  asyncio.run(get_transcription(audio_filepath))
+            return transcript
+            #return jsonify({'message': 'File received successfully', 'filePath': filepath})
 
         return jsonify({'error': 'Invalid file type'}), 400
 
