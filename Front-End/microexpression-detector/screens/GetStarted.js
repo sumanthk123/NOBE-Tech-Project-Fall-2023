@@ -9,8 +9,6 @@ import {
   Image,
 } from "react-native";
 
-
-
 const GetStarted = ({ navigation }) => {
   const svgUrl =
     "https://www.svgrepo.com/show/382362/emoticon-expression-face-liar-face-lie.svg";
@@ -31,20 +29,96 @@ const GetStarted = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>     
-      <Animated.Text
-        style={[styles.title, { transform: [{ scale: scaleValue }] }]}
+    <View
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        backgroundColor: "white",
+      }}
+    >
+
+
+      <View
+        style={{
+          width: 403,
+          height: 844,
+          left: 0,
+          top: 0,
+          position: "absolute",
+          backgroundColor: "#88C6FF",
+        }}
+      />
+      <View
+        style={{
+          width: 650,
+          height: 405.91,
+          left: -136,
+          top: 213,
+          position: "absolute",
+          justifyContent: "center",
+          alignItems: "center",
+          display: "flex",
+        }}
+      >
+        <View
+          style={{
+            width: 606.2,
+            height: 305.28,
+            transform: [{ rotate: "-10deg" }],
+            transformOrigin: "0 0",
+            backgroundColor: "white",
+            borderRadius: 84,
+          }}
+        />
+      </View>
+      <Text
+        style={{
+          width: 212,
+          height: 47,
+          left: 96,
+          top: 350,
+          position: "absolute",
+          color: "#00305F",
+          fontSize: 40,
+          fontFamily: "Recursive",
+          fontWeight: "1000",
+          wordWrap: "break-word",
+        }}
       >
         Lie:Detect
-      </Animated.Text>
+      </Text>
       <TouchableOpacity
-        style={styles.button}
+        style={{
+          width: 192,
+          height: 69,
+          left: 105,
+          top: 411,
+          position: "absolute",
+          backgroundColor: "#88C6FF",
+          borderRadius: 18,
+        }}
         onPress={handleButtonPress}
         activeOpacity={0.8}
       >
-        <Text style={styles.buttonText}>Get Started</Text>
+        <Text
+          style={{
+            color: "#00305F",
+            fontSize: 20,
+            fontFamily: "Recursive",
+            fontWeight: "1000",
+            textAlign: "center",
+            lineHeight: 24,
+            width: 192,
+            height: 69,
+            top: 20,
+            position: "absolute",
+          }}
+        >
+          Get Started
+        </Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -61,8 +135,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: "white",
     fontWeight: "bold",
-    fontFamily: "Recursive"
-
+    fontFamily: "Recursive",
   },
   button: {
     borderWidth: 2,
@@ -79,7 +152,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  
 });
 
 export default GetStarted;

@@ -73,12 +73,19 @@ export default function LoginPage() {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#88C6FF",
+      }}
+    >
       <View style={{ position: "absolute", top: 70, left: 15 }}>
         <TouchableOpacity
           onPress={() => {
             console.log("Go back button pressed");
-            navigation.navigate('GetStarted'); 
+            navigation.navigate("GetStarted");
           }}
           style={{ marginLeft: 10 }}
         >
@@ -86,36 +93,177 @@ export default function LoginPage() {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.title}>Get Started</Text>
-      <View style={styles.inputContainer}>
-        <Icon name="user" size={24} color="white" styles={styles.icon} />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          autoCapitalize="none"
-          placeholderTextColor="white"
+      <View
+        style={{
+          width: 313,
+          height: 490,
+          position: "absolute",
+          backgroundColor: "white",
+          borderRadius: 30,
+        }}
+      >
+        <View
+          style={{
+            width: 273,
+            height: 64,
+            left: 22,
+            top: 137,
+            position: "absolute",
+            backgroundColor: "#D9D9D9",
+            borderRadius: 10,
+          }}
+        >
+          <Icon name="user" size={24} color="#00305F" style={{position: "absolute", top: -40, left: 65}} />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            autoCapitalize="none"
+            placeholderTextColor="white"
+          />
+        </View>
+        <View
+          style={{
+            width: 273,
+            height: 65,
+            left: 19,
+            top: 243,
+            position: "absolute",
+            backgroundColor: "#D9D9D9",
+            borderRadius: 10,
+          }}
+        >
+          <Icon
+            name="lock"
+            size={24}
+            color="#00305F"
+            style={{ position: "absolute", top: -35, left: 105 }}
+          />
+
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            autoCapitalize="none"
+            placeholderTextColor="white"
+          />
+        </View>
+        <Text
+          style={{
+            width: 216,
+            height: 51,
+            left: 22,
+            top: 35,
+            position: "absolute",
+            color: "#00305F",
+            fontSize: 30,
+            fontFamily: "Recursive",
+            fontWeight: "1000",
+            wordWrap: "break-word",
+          }}
+        >
+          Get Started
+        </Text>
+        <View
+          style={{
+            width: 272,
+            height: 65,
+            left: 21,
+            top: 328,
+            position: "absolute",
+            backgroundColor: "#88C6FF",
+            borderRadius: 10,
+          }}
         />
-      </View>
-      <View style={styles.inputContainer}>
-        <Icon name="lock" size={24} color="white" styles={{ marginLeft: 30 }} />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          autoCapitalize="none"
-          placeholderTextColor="white"
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.loginButton} onPress={signIn}>
-          <Text style={styles.buttonText}>Login</Text>
+        <Text
+          style={{
+            width: 103,
+            height: 30,
+            left: 22,
+            top: 98,
+            position: "absolute",
+            color: "#00305F",
+            fontSize: 20,
+            fontFamily: "Recursive",
+            fontWeight: "1000",
+            wordWrap: "break-word",
+          }}
+        >
+          email
+        </Text>
+        <Text
+          style={{
+            width: 192,
+            height: 28,
+            left: 22,
+            top: 207,
+            position: "absolute",
+            color: "#00305F",
+            fontSize: 20,
+            fontFamily: "Recursive",
+            fontWeight: "1000",
+            wordWrap: "break-word",
+          }}
+        >
+          password
+        </Text>
+        <TouchableOpacity
+          style={{
+            width: 273,
+            height: 60,
+            left: 20,
+            top: 408,
+            position: "absolute",
+            backgroundColor: "#2980b9", // Button color
+            borderRadius: 10, // Rounded corners
+          }}
+          onPress={signIn}
+        >
+          <Text
+            style={{
+              color: "white",
+              fontSize: 20,
+              fontFamily: "Recursive",
+              fontWeight: "1000",
+              wordWrap: "break-word",
+              textAlign: "center",
+              position: "absolute",
+              left: 105,
+              top: 18,
+            }}
+          >
+            Login
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.signupButton} onPress={signUp}>
-          <Text style={styles.buttonText}>Sign Up</Text>
+        <TouchableOpacity
+          style={{
+            width: 191, // Set to the same width as the Login button
+            height: 30, // Set to the same height as the Login button
+            left: 75,
+            top: 348,
+            position: "absolute",
+            backgroundColor: "transparent",
+          }}
+          onPress={signUp}
+        >
+          <Text
+            style={{
+              color: "white",
+              fontSize: 20,
+              fontFamily: "Recursive",
+              fontWeight: "1000",
+              wordWrap: "break-word",
+              textAlign: "center",
+              position: "absolute",
+              left: 45,
+              top: 0,
+            }}
+          >
+            Sign Up
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
