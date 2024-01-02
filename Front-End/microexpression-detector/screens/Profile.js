@@ -62,7 +62,6 @@ const Profile = () => {
   );
   
   
-
 };
 
 const styles = StyleSheet.create({

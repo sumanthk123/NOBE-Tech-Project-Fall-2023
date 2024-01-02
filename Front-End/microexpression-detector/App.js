@@ -66,7 +66,7 @@ export default function App() {
             <Stack.Screen
               name="Info"
               component={Info}
-              options={{ title: "Info" }}
+              options={{ headerShown: true, title: "Info" }}
             />
             <Stack.Screen
               name="VideoLibrary"
