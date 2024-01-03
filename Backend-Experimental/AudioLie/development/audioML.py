@@ -8,9 +8,9 @@ import torch.optim as optim
 from torch.optim.lr_scheduler import StepLR
 
 TEST_NUM = 0
-EPOCHS = 15
+EPOCHS = 20
 LEARNING_RATE = 1.0
-OPTIM_GAMMA = 0.9
+OPTIM_GAMMA = 0.8
 BATCH_SIZE = 1
 
 
@@ -21,7 +21,7 @@ class CNN(nn.Module):
         self.conv2 = nn.Conv2d(4, 8, 1, 1)
         self.conv3 = nn.Conv2d(8, 16, 1, 1)
         self.fc1 = nn.Linear(288, 72)
-        self.fc2 = nn.Linear(72, 9)
+        self.fc2 = nn.Linear(72, 3)
         self.relu = nn.LeakyReLU()
 
     def forward(self, x):
@@ -79,7 +79,7 @@ def train(model, train_loader, optimizer, device='cpu'):
 
 
 def save_model(_model, _test_num, _epochs_arr, _loss_arr, _acc_arr):
-    torch.save(_model, f'modelv{_test_num}.pt')
+    torch.save(_model, f'3labelmodel{_test_num}.pt')
     plt.scatter(_epochs_arr, loss_arr)
     plt.savefig(f'v{_test_num}_loss')
     plt.show()
@@ -88,7 +88,7 @@ def save_model(_model, _test_num, _epochs_arr, _loss_arr, _acc_arr):
     plt.show()
 
 
-def test(model, test_loader, device='cpu'):
+def test(model, test_loader, device, epoch):
     model.eval()
     test_loss = 0
     correct = 0
@@ -102,6 +102,29 @@ def test(model, test_loader, device='cpu'):
 
     test_loss /= len(test_loader.dataset)
 
+    print('\nEpoch {}, Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+        epoch, test_loss, correct, len(test_loader.dataset),
+        100. * correct / len(test_loader.dataset)))
+
+    # Matplotlib
+    return 100. * correct / len(test_loader.dataset)
+
+
+def final_test(model, test_loader, device='cpu'):
+    model.eval()
+    test_loss = 0
+    correct = 0
+    with torch.no_grad():
+        for data, target in test_loader:
+            data, target = data.to(device), target.to(device)
+            output = model(data)
+            test_loss += f.nll_loss(output, target, reduction='sum').item()  # sum up batch loss
+            pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+            print(f"Prediction: {pred}, Actual: {target}")
+            correct += pred.eq(target.view_as(pred)).sum().item()
+
+    test_loss /= len(test_loader.dataset)
+
     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
@@ -110,7 +133,7 @@ def test(model, test_loader, device='cpu'):
     return 100. * correct / len(test_loader.dataset)
 
 
-dataset = CSVDataset("actorEmotionsTrainCSV.csv", "Emotion (Label)")
+dataset = CSVDataset("new_modified_actorEmotionsTrainCSV.csv", "Emotion (Label)")
 train_dataset, test_dataset = torch.utils.data.random_split(dataset, [0.8, 0.2])
 
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=BATCH_SIZE, shuffle=False)
@@ -132,7 +155,9 @@ acc_arr = []
 
 for i in range(1, EPOCHS + 1):
     loss_arr.append(train(network, train_loader, optimizer, device).detach().cpu())
-    acc_arr.append(test(network, test_loader, device))
+    acc_arr.append(test(network, test_loader, device, i))
     scheduler.step()
 
+
+final_test(network, test_loader, device)
 save_model(network, TEST_NUM, epochs_arr, loss_arr, acc_arr)
