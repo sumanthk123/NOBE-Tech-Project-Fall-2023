@@ -1,13 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { View, FlatList, TouchableOpacity, StyleSheet, Modal, Text } from 'react-native';
-import { Video } from 'expo-av';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  Text,
+  ActivityIndicator,
+} from "react-native";
+import { Video } from "expo-av";
 
 const VideoLibrary = ({ route }) => {
   const { videoList } = route.params;
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [numColumns, setNumColumns] = useState(2);
   const [isLoading, setLoading] = useState(false);
-
 
   const handleVideoPress = (video) => {
     setSelectedVideo(video);
@@ -17,54 +24,73 @@ const VideoLibrary = ({ route }) => {
     setSelectedVideo(null);
   };
 
+  const handleButtonPress = async () => {
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000); // 5000 milliseconds equals 5 seconds
+  };
+
   const handleButtonClick = async () => {
     setLoading(true);
-  
+
     const uploadedVideoResponse = await uploadVideo(selectedVideo.uri);
     if (uploadedVideoResponse && uploadedVideoResponse.audioFileUrl) {
       try {
-        const transcribeResponse = await fetch('http://127.0.0.1:5000/transcribe', {
-          method: 'POST',
-          body: JSON.stringify({ audioFileUrl: uploadedVideoResponse.audioFileUrl }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-  
+        const transcribeResponse = await fetch(
+          "http://127.0.0.1:5000/transcribe",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              audioFileUrl: uploadedVideoResponse.audioFileUrl,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
         const transcribeData = await transcribeResponse.json(); // this is the transcription
         // Handle the transcribed text here
-        console.log(transcribeData.transcription);
+        const transcription = transcribeData.transcription;
+        console.log(transcription);
+
       } catch (error) {
-        console.error('Error transcribing audio:', error);
+        console.error("Error transcribing audio:", error);
+        if (error instanceof TypeError) {
+          console.error("Network error: ", error.message);
+        }
       }
+      
     }
-  
+
     setLoading(false);
-  };  
+  };
 
   const uploadVideo = async (videoUri) => {
     const formData = new FormData();
-    formData.append('file', {
+    formData.append("file", {
       uri: videoUri,
-      type: 'video/mp4', // Adjust the type based on your video format
-      name: 'upload.mp4'
+      type: "video/mp4", // Adjust the type based on your video format
+      name: "upload.mp4",
     });
-  
+
     try {
-      const response = await fetch('http://127.0.0.1:5000/upload', { // Replace with your actual backend URL
-        method: 'POST',
+      const response = await fetch("http://127.0.0.1:5000/upload", {
+        // Replace with your actual backend URL
+        method: "POST",
         body: formData,
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
-  
+
       return await response.json(); // Assuming the backend sends a response with the audio file URL or ID
     } catch (error) {
-      console.error('Error uploading video:', error);
+      console.error("Error uploading video:", error);
     }
   };
-  
 
   return (
     <View style={styles.container}>
@@ -75,7 +101,12 @@ const VideoLibrary = ({ route }) => {
         numColumns={numColumns}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handleVideoPress(item)}>
-            <Video source={{ uri: item.uri }} style={styles.thumbnailVideo} useNativeControls positionMillis={500}/>
+            <Video
+              source={{ uri: item.uri }}
+              style={styles.thumbnailVideo}
+              useNativeControls
+              positionMillis={500}
+            />
           </TouchableOpacity>
         )}
       />
@@ -88,14 +119,29 @@ const VideoLibrary = ({ route }) => {
           onRequestClose={handleCloseModal}
         >
           <View style={styles.modalContainer}>
-            <Video source={{ uri: selectedVideo.uri }} style={styles.fullScreenVideo} useNativeControls />
+            <Video
+              source={{ uri: selectedVideo.uri }}
+              style={styles.fullScreenVideo}
+              useNativeControls
+            />
             <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.customButton} onPress={handleButtonClick}>
+              <TouchableOpacity
+                style={styles.customButton}
+                onPress={handleButtonClick}
+              >
                 <Text style={styles.buttonText}>Run LieDetect</Text>
               </TouchableOpacity>
-            <TouchableOpacity style={styles.closeButton} onPress={handleCloseModal}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
+              {isLoading && (
+                <View style={styles.spinnerContainer}>
+                  <ActivityIndicator size="large" color="#0000ff" />
+                </View>
+              )}
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={handleCloseModal}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
@@ -107,7 +153,7 @@ const VideoLibrary = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   thumbnailVideo: {
     width: 180,
@@ -116,41 +162,48 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'flex-end', // Align the close button to the bottom
+    justifyContent: "flex-end", // Align the close button to the bottom
   },
   fullScreenVideo: {
     flex: 1,
-    alignSelf: 'stretch',
-    backgroundColor: 'black',
+    alignSelf: "stretch",
+    backgroundColor: "black",
   },
   closeButton: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 8,
     margin: 10,
   },
   customButton: {
-    backgroundColor: '#3F51B5',
+    backgroundColor: "#3F51B5",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 8,
     margin: 10,
   },
   buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 20,
   },
   buttonText: {
-    color: '#000',
+    color: "#000",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
-
+  spinnerContainer: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent background
+},
 });
 
 export default VideoLibrary;
