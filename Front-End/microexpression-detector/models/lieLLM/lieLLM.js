@@ -1,6 +1,7 @@
 const axios = require('axios');
+// this is where the LieLLM bug is -> reason is due to Network Error. Need to fix backend.
 
-const apiKey = 'your_api_key'; // Replace with your actual API key
+const apiKey = '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'; // Replace with your actual API key
 const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
 
 // Function to fetch the transcription from the Flask backend
@@ -59,7 +60,3 @@ const messages = [
   {"role": "system", "content": "You are a model which is supposed to read a transcription and produce a vector <positive, negative, neutral> based off of what the content of the transcription is, the total of the vector sum must equal to 1."},
 ];
 
-// Assuming 'transcriptionText' is the variable holding the Deepgram transcription
-let transcriptionText = "Your transcription text from Deepgram goes here.";
-
-generateText(messages, transcriptionText);

@@ -124,18 +124,19 @@ const VideoLibrary = ({ route }) => {
               style={styles.fullScreenVideo}
               useNativeControls
             />
-            <View style={styles.buttonsContainer}>
-              <TouchableOpacity
-                style={styles.customButton}
-                onPress={handleButtonClick}
-              >
-                <Text style={styles.buttonText}>Run LieDetect</Text>
-              </TouchableOpacity>
-              {isLoading && (
+            {isLoading && (
                 <View style={styles.spinnerContainer}>
                   <ActivityIndicator size="large" color="#0000ff" />
                 </View>
               )}
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity
+                style={styles.customButton}
+                onPress={handleButtonPress}
+              >
+                <Text style={styles.buttonText}>Run LieDetect</Text>
+              </TouchableOpacity>
+              
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={handleCloseModal}
@@ -197,13 +198,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   spinnerContainer: {
-    position: 'absolute',
-    left: '50%',
-    top: '50%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent background
-},
+    position: 'absolute',   // Keep it absolute
+    left: 0,                // Align to the left edge of the container
+    right: 0,               // Align to the right edge of the container
+    top: 0,                 // Align to the top edge of the container
+    bottom: 0,              // Align to the bottom edge of the container
+    alignItems: 'center',   // Center horizontally
+    justifyContent: 'center', // Center vertically
+    backgroundColor: 'rgba(0, 0, 0, 0.65)', // Semi-transparent background
+  },
 });
 
 export default VideoLibrary;

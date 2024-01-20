@@ -3,11 +3,11 @@ import torch
 import numpy as np
 import librosa
 
-
 # analyze_audio function outputs confidence vector of [positive, negative, neutral]
 def analyze_audio(audio_path):
     # Initialize model
     model = torch.load("3labelmodel0.pt")
+    print("model loaded")
     model.eval()
 
     # Transform audio file
@@ -36,5 +36,5 @@ def analyze_audio(audio_path):
     output = model(audio_tensor)
     return output
 
-print(analyze_audio("03-01-03-02-01-02-01.wav"))
+print(analyze_audio()) # plug in a audio into here 
 

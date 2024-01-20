@@ -4,7 +4,8 @@ import os
 from werkzeug.utils import secure_filename
 import asyncio
 import whisper
-import subprocess
+import subprocess 
+import torch 
 
 app = Flask(__name__)
 CORS(app)
