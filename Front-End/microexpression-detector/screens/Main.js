@@ -1,5 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Button,
   StyleSheet,
@@ -10,24 +9,41 @@ import {
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import { Video } from "expo-av";
-import Icon from "react-native-vector-icons/Ionicons"; // Import the icon library
+import Icon from "react-native-vector-icons/Ionicons";
 import Icons from "react-native-vector-icons/FontAwesome";
-import CameraIcon from "/Users/arjunkulkarni/Desktop/lie-detector/NOBE-Tech-Project-Fall-2023/Front-End/microexpression-detector/assets/Images/Screen_Shot_2023-10-24_at_5.24.37_PM-removebg-preview.png";
+import CameraIcon from "../assets/Images/Screen_Shot_2023-10-24_at_5.24.37_PM-removebg-preview.png";
+import { useNavigation } from "@react-navigation/native";
+import VideoLibrary from "./VideoLibrary";
+//import Voice from '@react-native-voice/voice';
 
-export default function camera() {
+
+
+const CameraComponent = () => {
+  const navigation = useNavigation();
+
   const [type, setType] = useState(CameraType.back);
   const [hasCameraPermission, setHasCameraPermission] =
     Camera.useCameraPermissions();
   const [isRecording, setIsRecording] = useState(false);
   const [video, setVideo] = useState();
   const cameraRef = useRef(null);
+  const [videoList, setVideoList] = useState([]);
+  //let [started, setStarted] = useState(false);
+  //let [results, setResults] = useState([]);
 
   useEffect(() => {
     (async () => {
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === "granted");
     })();
+   // Voice.onSpeechError = onSpeechError;
+    //Voice.onSpeechResults = onSpeechResults;
+
+   /* return() => {
+      Voice.destroy().then(Voice.removeAllListeners);
+   }*/
   }, []);
+  
 
   if (hasCameraPermission === false) {
     return <Text>No access to camera</Text>;
@@ -38,39 +54,70 @@ export default function camera() {
       current === CameraType.back ? CameraType.front : CameraType.back
     );
   }
+  
+  /*const startSpeechToText = () => {
+    Voice.start("en");
+    setStarted(true);
+  };
+
+  const stopSpeechToText = () => {
+    Voice.stop();
+    setStarted(false);
+  };
+
+  const onSpeechResults = (result) => {
+    setResults(result.value);
+    console.log("Speech to text results:", result.value);
+  };
+
+  const onSpeechError = (error) => {
+    console.log(error);
+  };
+ */
+
 
   const recordVideo = async () => {
     setIsRecording(true);
-    cameraRef.current.recordAsync().then((recordedVideo) => {
-      setVideo(recordedVideo);
+    //startSpeechToText();
+    try {
+      const recordedVideo = await cameraRef.current.recordAsync();
+      console.log('Recorded video:', recordedVideo);
+      addVideoToLibrary(recordedVideo);
+    } catch (error) {
+      console.error('Error recording video:', error);
+    } finally {
+      console.log('Stopping recording...');
       setIsRecording(false);
-    });
+      // stopSpeechToText();
+    }
   };
 
   const stopVideo = async () => {
     setIsRecording(false);
     cameraRef.current.stopRecording();
+    //stopSpeechToText();
   };
 
-  if (video) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.videoContainer}>
-          <Video
-            source={{ uri: video.uri }}
-            style={styles.video}
-            useNativeControls
-            resizeMode="contain"
-            isLooping
-          />
-        </View>
-        <View style={styles.retakeButtonContainer}>
-          <Button title="Retake" onPress={() => setVideo(undefined)} />
-        </View>
-      </View>
-    );
-  }
+  const addVideoToLibrary = (video) => {
+    setVideoList((prevList) => [...prevList, video]);
+    console.log("video is added to libray");
+  };
 
+ 
+  /*if(video){
+    return(
+        <View style={styles.container}>
+            <View style={styles.videoContainer}>
+                <Video source={{ uri: video.uri }} style={styles.video} useNativeControls resizeMode="contain" isLooping />
+            </View>
+            <View style={styles.retakeButtonContainer}>
+                <Button title="Retake" onPress={() => setVideo(undefined)} />
+            </View>
+
+        </View>
+    )
+    }
+*/
   return (
     <View style={styles.container}>
       <Camera style={styles.camera} type={type} ref={cameraRef}>
@@ -87,35 +134,49 @@ export default function camera() {
                   ? styles.recordingButton
                   : styles.notRecordingButton,
               ]}
-              onPress={isRecording ? stopVideo : recordVideo}
+              onPress={isRecording ? stopVideo:recordVideo}
             >
               <Text style={styles.text}>
                 {isRecording ? "Stop Recording" : "Record"}
               </Text>
             </TouchableOpacity>
           </View>
+          <Image
+                source={require('../assets/outline2.png')} 
+                style={styles.overlayImage}
+            />
         </View>
       </Camera>
 
+      {/* Render the NavBar component */}
       <View style={styles.navBarContainer}>
         <View style={styles.navBar}>
-          <TouchableOpacity style={styles.navIcon}>
+          <TouchableOpacity
+            style={styles.navIcon}
+            onPress={() => navigation.navigate("Profile")}
+          >
             <Icon name="person" size={24} color="#000" />
             <Text> Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navIcon}>
+          <TouchableOpacity
+            style={styles.navIcon}
+            onPress={() => navigation.navigate("Info")}
+          >
             <Icons name="info-circle" size={24} color="#000" />
             <Text> Info</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navIcon}>
+          <TouchableOpacity
+            style={styles.navIcon}
+            onPress={() => navigation.navigate('VideoLibrary', {videoList})}
+          >
             <Icon name="search" size={24} color="#000" />
-            <Text> Detect</Text>
+            <Text> Video Library</Text>
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -130,24 +191,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "transparent",
     flexDirection: "row",
-    alignItems: "center", // Center the buttons vertically
-    justifyContent: "space-around", // Spacing around the buttons
+    alignItems: "center",
+    justifyContent: "space-around",
     marginBottom: 30,
     alignContent: "center",
-    
   },
   centeredContent: {
-    alignItems: 'center',
+    alignItems: "center",
     flexDirection: "row",
   },
   retakeButtonContainer: {
-    alignItems: "center",
-    marginBottom: 30, // Adjust margin bottom as needed for the retake button
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 30,
+    alignItems: 'center',
   },
   button: {
-    padding: 15, // Add some padding for touchability
-    borderRadius: 20, // Rounded corners
-    width: 150, // Adjust the button width
+    padding: 15,
+    borderRadius: 20,
+    width: 150,
     alignItems: "center",
     alignSelf: "flex-end",
     marginBottom: 0,
@@ -173,27 +235,27 @@ const styles = StyleSheet.create({
   },
   overlayImage: {
     position: "absolute",
-    left: 70, // Adjust the left position of the image
-    top: 150, // Adjust the top position of the image
-    width: 250, // Adjust the width of the image
-    height: 250, // Adjust the height of the image
+    left: 70,
+    top: 150,
+    width: 250,
+    height: 250,
   },
   icon: {
     marginTop: 600,
-    width: 100, // Adjust the width of the icon as needed
-    height: 30
+    width: 100,
+    height: 30,
   },
   navBar: {
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 16, // Adjust the vertical padding
-    paddingHorizontal: 20, // Adjust the horizontal padding
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     borderTopWidth: 1,
     borderTopColor: "#ccc",
-    borderRadius: 20, // Add border radius to make it round
-    marginBottom: 10, // Adjust the margin bottom to move it up
+    borderRadius: 20,
+    marginBottom: 10,
     alignContent: "center",
   },
   navIcon: {
@@ -202,8 +264,18 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   navBarContainer: {
-    backgroundColor: "black", // Container background color
-    padding: 10, // Add any padding or styling you desire
+    backgroundColor: "black",
+    padding: 10,
     marginBottom: 30,
   },
+  overlayImage: {
+    position: 'absolute',
+    left: 70, // Adjust the left position of the image
+    top: 150, // Adjust the top position of the image
+    width: 250, // Adjust the width of the image
+    height: 250, // Adjust the height of the image
+
+},
 });
+
+export default CameraComponent;
