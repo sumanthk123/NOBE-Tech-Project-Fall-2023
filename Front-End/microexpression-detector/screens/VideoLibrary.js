@@ -31,17 +31,18 @@ const VideoLibrary = ({ route }) => {
 
     // Send a request to your backend with the selected video URI
     console.log('Request Payload:', JSON.stringify({ videoUri: selectedVideo.uri }));
-    const response = await fetch('http://10.195.103.203:5000/', {
+    const response = await fetch('http://10.193.195.128:5000/', {
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',
       },
       body: formData,
     });
-    console.log('Request Status:', response.status);
+    //console.log('Request Status:', response.status);
     const transcription = await response.text();
-    console.log('Request Body:', await response.text());
+    console.log('Request Body:', transcription);
     
+    //console.log('Transcription:', transcription);
     setTranscript(transcription);
 
   };
@@ -68,7 +69,16 @@ const VideoLibrary = ({ route }) => {
           onRequestClose={handleCloseModal}
         >
           <View style={styles.modalContainer}>
-            <Video source={{ uri: selectedVideo.uri }} style={styles.fullScreenVideo} useNativeControls />
+            {transcript ? (
+              // Display the transcript if available
+              <View style={styles.transcriptContainer}>
+                <Text style={styles.transcriptText}>{transcript}</Text>
+              </View>
+            ) : (
+              // Display the video if no transcript is available
+              <Video source={{ uri: selectedVideo.uri }} style={styles.fullScreenVideo} useNativeControls />
+            )}
+            
             <TouchableOpacity style={styles.closeButton} onPress={handleCloseModal}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
@@ -77,13 +87,6 @@ const VideoLibrary = ({ route }) => {
             <TouchableOpacity style={styles.closeButton} onPress={handleTranscribePress}>
               <Text style={styles.closeButtonText}>Transcibe</Text>
             </TouchableOpacity>
-
-            {/* Display the transcript */}
-            {transcript && (
-              <View style={styles.transcriptContainer}>
-                <Text style={styles.transcriptText}>{transcript.error || transcript}</Text>
-              </View>
-            )}
 
           </View>
         </Modal>
@@ -120,17 +123,17 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   transcriptContainer: {
-    backgroundColor: 'white',
-    padding: 10,
-    marginVertical: 20,
-    position: 'absolute', // Adjust position to overlay on the video
-    bottom: 0, // Align to the bottom
-    left: 0,
-    right: 0,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
   },
   transcriptText: {
-    color: 'black',
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
   },
+
 });
 
 export default VideoLibrary;
